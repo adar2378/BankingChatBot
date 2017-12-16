@@ -1,7 +1,10 @@
 package com.example.masteradar.bankingchatbot;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -9,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -23,7 +28,7 @@ public class GetSentiment {
 // **********************************************
 
     // Replace the accessKey string value with your valid access key.
-    static String accessKey = "8e1747ca92c44c8ab5afeb2432a9f7d6";
+    static String accessKey = "5f5c76884ba54fb4b136d9ea5cc480e7";
 
 // Replace or verify the region.
 
@@ -70,5 +75,18 @@ public class GetSentiment {
         JsonObject json = parser.parse(json_text).getAsJsonObject();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(json);
+    }
+
+    public static String sentimentExtractor(String json_text){
+        String sentimentScore = "";
+        JsonParser parser = new JsonParser();
+        Log.d("phr", "senti: ");
+        JsonObject json = parser.parse(json_text).getAsJsonObject();
+        JsonArray jsonArray = json.getAsJsonArray("documents");
+        JsonObject anotherJsonObject = (JsonObject) jsonArray.get(0);
+        Log.d("tag7", "sentimentExtractor: "+jsonArray.get(0));
+        sentimentScore = anotherJsonObject.get("score").getAsString();
+
+        return sentimentScore;
     }
 }

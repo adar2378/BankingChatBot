@@ -45,18 +45,27 @@ public class CustomAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
-        if(view == null){
+
             if(list_chat_bots.get(i).isSend){
                 view = layoutInflater.inflate(R.layout.list_item_send,null);
+                Log.d("tag4","here in send "+i);
 
             }
             else{
                 view = layoutInflater.inflate(R.layout.list_item_recieve,null);
+                Log.d("tag4","here in recieved "+i);
             }
+
             BubbleTextView text_meesage = view.findViewById(R.id.textMessage);
             Log.d("id",""+i+text_meesage);
             text_meesage.setText(list_chat_bots.get(i).getMessage());
-        }
+
+       /* else if(i %2 ==0){
+            view = layoutInflater.inflate(R.layout.list_item_send,null);
+            BubbleTextView text_meesage = view.findViewById(R.id.textMessage);
+            Log.d("id",""+i+text_meesage);
+            text_meesage.setText(list_chat_bots.get(i).getMessage());
+        }*/
         return view;
     }
 

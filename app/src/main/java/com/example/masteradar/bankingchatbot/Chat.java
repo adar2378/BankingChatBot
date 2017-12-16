@@ -51,15 +51,22 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String text = editText.getText().toString();
-                ChatBot chatBot= new ChatBot(text,true);
-                list_chat.add(chatBot);
-                BotReply botReply = new BotReply(text);
+                if (text.length()==0){
+                    Toast.makeText(Chat.this, "Write something first!", Toast.LENGTH_SHORT).show();
 
-                ChatBot chatBot1= new ChatBot(botReply.getReply(),false);
-                list_chat.add(chatBot1);
-                CustomAdapter adapter = new CustomAdapter(list_chat,getApplicationContext());
-                listView.setAdapter(adapter);
-                editText.setText("");
+                }
+                else{
+                    ChatBot chatBot= new ChatBot(text,true);
+                    list_chat.add(chatBot);
+                    BotReply botReply = new BotReply(text);
+
+                    ChatBot chatBot1= new ChatBot(botReply.getReply(),false);
+                    list_chat.add(chatBot1);
+                    CustomAdapter adapter = new CustomAdapter(list_chat,getApplicationContext());
+                    listView.setAdapter(adapter);
+                    editText.setText("");
+                }
+
             }
         });
         if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -153,12 +160,15 @@ public class Chat extends AppCompatActivity {
             try {
                 Documents documents = new Documents ();
                 documents.add ("1","en", text);
+                Log.d("tag5", "setReply: ");
+                List<String> keys = GetKeyPhrases.keyPhraseExtractor(GetKeyPhrases.GetKeyPhrases(documents));
+                double score = Double.parseDouble(GetSentiment.sentimentExtractor(GetSentiment.GetSentiment(documents)));
 
-
-                String responsePhrase = GetKeyPhrases.prettify(GetKeyPhrases.GetKeyPhrases(documents));
-                String responseSentiment = GetSentiment.prettify(GetSentiment.GetSentiment(documents));
-
-                reply = responsePhrase+" "+responseSentiment;
+            /*    String responsePhrase = GetKeyPhrases.prettify(GetKeyPhrases.GetKeyPhrases(documents));
+                String responseSentiment = GetSentiment.prettify(GetSentiment.GetSentiment(documents));*/
+                /*reply = responsePhrase+" "+responseSentiment;*/
+                Log.d("tag6", ""+text);
+                reply = (new ReplyGenerator(text,keys,score).generate());
 
 
             }
@@ -166,6 +176,7 @@ public class Chat extends AppCompatActivity {
                 System.out.println (e);
             }
         }
+
 
     }
 }

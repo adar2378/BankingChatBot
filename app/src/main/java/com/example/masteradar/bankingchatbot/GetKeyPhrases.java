@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -11,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -25,7 +28,7 @@ public class GetKeyPhrases {
 // **********************************************
 
     // Replace the accessKey string value with your valid access key.
-    static String accessKey = "8e1747ca92c44c8ab5afeb2432a9f7d6";
+    static String accessKey = "5f5c76884ba54fb4b136d9ea5cc480e7";
 
 // Replace or verify the region.
 
@@ -70,9 +73,31 @@ public class GetKeyPhrases {
     public static String prettify(String json_text) {
         JsonParser parser = new JsonParser();
         JsonObject json = parser.parse(json_text).getAsJsonObject();
+       /* JsonArray jsonArray = json.getAsJsonArray("documents");
+        JsonObject anotherJsonObject = (JsonObject) jsonArray.get(0);
+        JsonArray anotherJsonArray = anotherJsonObject.getAsJsonArray("keyPhrases");
+        for (int ii = 0;ii<anotherJsonArray.size();ii++){
+            Log.d("arrays",""+anotherJsonArray.get(ii).getAsString());
+        }*/
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Log.d("key",gson.toJson(json));
         return gson.toJson(json);
+    }
+
+    public static List<String> keyPhraseExtractor(String json_text){
+        List<String> keyPhrasesList = new ArrayList<>();
+        JsonParser parser = new JsonParser();
+        Log.d("phr", "keyPhraseExtractor: ");
+        JsonObject json = parser.parse(json_text).getAsJsonObject();
+        JsonArray jsonArray = json.getAsJsonArray("documents");
+        JsonObject anotherJsonObject = (JsonObject) jsonArray.get(0);
+        JsonArray anotherJsonArray = anotherJsonObject.getAsJsonArray("keyPhrases");
+        for (int ii = 0;ii<anotherJsonArray.size();ii++){
+            Log.d("arrays",""+anotherJsonArray.get(ii).getAsString());
+            keyPhrasesList.add(anotherJsonArray.get(ii).getAsString());
+            Log.d("arrays1",""+keyPhrasesList.get(ii));
+        }
+        return keyPhrasesList;
     }
 
 
